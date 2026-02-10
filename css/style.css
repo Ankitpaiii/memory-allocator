@@ -527,6 +527,11 @@ tr:hover {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
+
 .tooltip.hidden {
     display: none;
+}
+
+.hidden {
+    display: none !important;
 }
