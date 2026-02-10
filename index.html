@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Allocation Simulator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- HEADER SECTION -->
+        <header class="main-header">
+            <div class="header-content">
+                <h1>🧠 Memory Utilization and Fragmentation Analysis</h1>
+                <h2>Simulation of First Fit, Best Fit, Worst Fit, and Next Fit Algorithms</h2>
+            </div>
+            <nav class="header-nav">
+                <a href="index.html" class="active">Simulator</a>
+                <a href="about.html">Theory & Concepts</a>
+            </nav>
+        </header>
+
+        <!-- MAIN CONTENT GRID -->
+        <main class="main-grid">
+
+            <!-- LEFT COLUMN: CONTROL PANEL -->
+            <aside class="control-panel">
+                <div class="panel-section" id="initialization-section">
+                    <h3>1. Memory Initialization</h3>
+
+                    <div class="form-group">
+                        <label>Initialization Mode</label>
+                        <div class="radio-bar" style="display: flex; gap: 10px; margin-bottom: 10px;">
+                            <label style="font-weight: normal; cursor: pointer;">
+                                <input type="radio" name="initMode" value="total" checked> Total Size
+                            </label>
+                            <label style="font-weight: normal; cursor: pointer;">
+                                <input type="radio" name="initMode" value="custom"> Custom Partitions
+                            </label>
+                        </div>
+                    </div>
+
+                    <div id="input-total" class="form-group">
+                        <label for="totalMemory">Total Memory Size (KB)</label>
+                        <input type="number" id="totalMemory" value="1000" min="1" placeholder="e.g., 1000">
+                    </div>
+
+                    <div id="input-custom" class="form-group hidden">
+                        <label for="partitionSizes">Partition Sizes (KB, comma-sep)</label>
+                        <input type="text" id="partitionSizes" placeholder="e.g., 100, 200, 300, 150">
+                        <small style="color: rgba(255,255,255,0.6); font-size: 0.8rem;">Enter sizes separated by
+                            commas</small>
+                    </div>
+                    <div class="actions">
+                        <button id="btnInitialize" class="btn primary">Initialize Memory</button>
+                        <button id="btnReset" class="btn secondary" disabled>Reset</button>
+                    </div>
+                </div>
+
+                <div class="panel-section" id="algorithm-section">
+                    <h3>2. Allocation Algorithm</h3>
+                    <div class="radio-group">
+                        <label class="radio-card">
+                            <input type="radio" name="algorithm" value="firstFit" checked>
+                            <span>First Fit</span>
+                        </label>
+                        <label class="radio-card">
+                            <input type="radio" name="algorithm" value="bestFit">
+                            <span>Best Fit</span>
+                        </label>
+                        <label class="radio-card">
+                            <input type="radio" name="algorithm" value="worstFit">
+                            <span>Worst Fit</span>
+                        </label>
+                        <label class="radio-card">
+                            <input type="radio" name="algorithm" value="nextFit">
+                            <span>Next Fit</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="panel-section" id="process-section">
+                    <h3>3. Process Management</h3>
+                    <div class="form-group">
+                        <label for="processId">Process ID</label>
+                        <input type="text" id="processId" placeholder="e.g., P1">
+                    </div>
+                    <div class="form-group">
+                        <label for="processSize">Process Size (KB)</label>
+                        <input type="number" id="processSize" min="1" placeholder="e.g., 200">
+                    </div>
+                    <div class="actions">
+                        <button id="btnAllocate" class="btn success" disabled>Allocate</button>
+                        <button id="btnDeallocate" class="btn danger" disabled>Deallocate ID</button>
+                    </div>
+                    <p id="error-message" class="error-text"></p>
+                </div>
+            </aside>
+
+            <!-- RIGHT COLUMN: VISUALIZATION & STATS -->
+            <section class="visualization-panel">
+
+                <!-- MEMORY VISUALIZATION -->
+                <div class="viz-container">
+                    <div class="section-header">
+                        <h3>Memory Visualization (RAM)</h3>
+                        <div class="legend">
+                            <span class="legend-item"><span class="dot free"></span> Free</span>
+                            <span class="legend-item"><span class="dot allocated"></span> Allocated</span>
+                        </div>
+                    </div>
+
+                    <div id="memory-container" class="memory-bar-container">
+                        <!-- Memory blocks will be injected here via JS -->
+                        <div class="placeholder-text">Please initialize memory to begin simulation.</div>
+                    </div>
+
+                    <div id="memory-tooltip" class="tooltip hidden"></div>
+                </div>
+
+                <!-- STATISTICS DASHBOARD -->
+                <div class="stats-dashboard">
+                    <div class="stat-card">
+                        <span class="stat-label">Total Memory</span>
+                        <span class="stat-value" id="statTotal">0 KB</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Used Memory</span>
+                        <span class="stat-value" id="statUsed">0 KB</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Free Memory</span>
+                        <span class="stat-value" id="statFree">0 KB</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Utilization</span>
+                        <span class="stat-value highlight" id="statUtilization">0%</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Ext. Fragmentation</span>
+                        <span class="stat-value warning" id="statExtFrag">0 KB</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Success Rate</span>
+                        <span class="stat-value" id="statSuccessRate">100%</span>
+                    </div>
+                </div>
+
+                <!-- CHARTS ROW (Optional/Hidden for MVP) -->
+                <div class="charts-container"> <!-- Hidden initially -->
+                    <canvas id="utilizationChart"></canvas>
+                </div>
+
+                <!-- LOGS & TABLE GRID -->
+                <div class="bottom-panel-grid">
+                    <div class="log-panel">
+                        <h3>Algorithm Logs</h3>
+                        <div id="log-content" class="log-content">
+                            <div class="log-entry system">System initialized. Waiting for input...</div>
+                        </div>
+                    </div>
+
+                    <div class="table-panel">
+                        <h3>Block Table</h3>
+                        <div class="table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Size (KB)</th>
+                                        <th>Status</th>
+                                        <th>Process</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="block-table-body">
+                                    <!-- Rows injected by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+        </main>
+
+        <footer>
+            <p>Memory Allocation Simulator &copy; 2026</p>
+        </footer>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/memory.js"></script>
+    <script src="js/algorithms.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/ui.js"></script>
+</body>
+
+</html>

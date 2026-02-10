@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Allocation Theory - OS Concepts</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .theory-content {
+            padding: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+            color: var(--text-main);
+        }
+
+        .algo-card {
+            background-color: var(--bg-panel);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 2rem;
+            border-left: 5px solid var(--primary);
+            box-shadow: 0 4px 15px rgba(74, 97, 99, 0.05);
+            /* Soft shadow */
+        }
+
+        .algo-card h2 {
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .algo-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .pros,
+        .cons {
+            background-color: var(--bg-input);
+            padding: 1rem;
+            border-radius: 6px;
+        }
+
+        .pros h4 {
+            color: #5D7A7D;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Slate Teal */
+        .cons h4 {
+            color: var(--danger);
+            margin-bottom: 0.5rem;
+        }
+
+        ul {
+            padding-left: 1.2rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-container">
+        <header class="main-header">
+            <div class="header-content">
+                <h1>Memory Allocation Algorithms</h1>
+                <h2>Theory & Concepts</h2>
+            </div>
+            <nav class="header-nav">
+                <a href="index.html">Simulator</a>
+                <a href="about.html" class="active">Theory & Concepts</a>
+            </nav>
+        </header>
+
+        <div class="theory-content">
+
+            <div class="algo-card">
+                <h2>1. First Fit</h2>
+                <p>Allocates the <strong>first hole</strong> that is big enough. Searching can start either from the
+                    beginning of the set of holes or where the previous first-fit search ended. We can stop searching as
+                    soon as we find a free hole that is large enough.</p>
+                <br>
+                <div class="algo-details">
+                    <div class="pros">
+                        <h4>Advantages</h4>
+                        <ul>
+                            <li>Fastest algorithm because it searches as little as possible.</li>
+                            <li>Simple to implement.</li>
+                        </ul>
+                    </div>
+                    <div class="cons">
+                        <h4>Disadvantages</h4>
+                        <ul>
+                            <li>The remaining unused memory areas (holes) are left unused (external fragmentation).</li>
+                            <li>Tends to concentrate allocation at one end of memory.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="algo-card" style="border-left-color: var(--secondary);">
+                <h2>2. Best Fit</h2>
+                <p>Allocates the <strong>smallest hole</strong> that is big enough. We must search the entire list,
+                    unless the list is ordered by size. This strategy produces the smallest leftover hole.</p>
+                <br>
+                <div class="algo-details">
+                    <div class="pros">
+                        <h4>Advantages</h4>
+                        <ul>
+                            <li>Memory utilization is generally better than First Fit.</li>
+                            <li>Minimizes wasted space in the short term.</li>
+                        </ul>
+                    </div>
+                    <div class="cons">
+                        <h4>Disadvantages</h4>
+                        <ul>
+                            <li>Slower because it must search the entire list every time.</li>
+                            <li>Creates many very small holes that are difficult to use (high external fragmentation).
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="algo-card" style="border-left-color: var(--warning);">
+                <h2>3. Worst Fit</h2>
+                <p>Allocates the <strong>largest hole</strong>. Again, we must search the entire list, unless it is
+                    sorted by size. This strategy produces the largest leftover hole, which may be more useful than the
+                    tiny holes from Best Fit.</p>
+                <br>
+                <div class="algo-details">
+                    <div class="pros">
+                        <h4>Advantages</h4>
+                        <ul>
+                            <li>Produces the largest leftover hole, which is more likely to be useful for future
+                                processes.</li>
+                            <li>Reduces the production of small, unusable holes.</li>
+                        </ul>
+                    </div>
+                    <div class="cons">
+                        <h4>Disadvantages</h4>
+                        <ul>
+                            <li>Slow as it requires searching the entire list.</li>
+                            <li>Tends to break up large free blocks, potentially causing issues for large processes
+                                later.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="algo-card" style="border-left-color: var(--success);">
+                <h2>4. Next Fit</h2>
+                <p>Similar to First Fit, but starts the search from the <strong>last allocated block</strong>. It wraps
+                    around to the beginning if it reaches the end.</p>
+                <br>
+                <div class="algo-details">
+                    <div class="pros">
+                        <h4>Advantages</h4>
+                        <ul>
+                            <li>Very fast allocation.</li>
+                            <li>Distributes allocations more evenly across memory than First Fit.</li>
+                        </ul>
+                    </div>
+                    <div class="cons">
+                        <h4>Disadvantages</h4>
+                        <ul>
+                            <li>May break up the largest block of free memory more often.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+
+</html>
