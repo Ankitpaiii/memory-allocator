@@ -37,6 +37,9 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     let memorySystem = null;
+    let currentInitData = null; // Store initialization data for replay
+    let operationHistory = []; // Store sequence of operations for replay
+
 
     // Event Listeners
     elements.btnInitialize.addEventListener('click', initializeMemory);
@@ -57,9 +60,20 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Algorithm Change Listener (Auto-Replay)
+    Array.from(elements.algorithmRadios).forEach(radio => {
+        radio.addEventListener('change', () => {
+            if (memorySystem && operationHistory.length > 0) {
+                replaySimulation();
+            }
+        });
+    });
+
+
     // Initialization
     function initializeMemory() {
         let initData;
+
         const mode = Array.from(elements.initModeRadios).find(r => r.checked).value;
 
         if (mode === 'custom') {
@@ -86,7 +100,10 @@ document.addEventListener('DOMContentLoaded', () => {
             log("Initializing with total size: " + size + " KB", "system");
         }
 
+        currentInitData = initData; // Save for replay
+        operationHistory = []; // Clear history on new init
         memorySystem = new MemorySystem(initData);
+
 
         // Enable controls
         elements.btnReset.disabled = false;
@@ -105,6 +122,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function resetMemory() {
         memorySystem = null;
+        currentInitData = null;
+        operationHistory = [];
+
 
         // Disable simulation controls
         elements.btnAllocate.disabled = true;
@@ -157,7 +177,11 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        // Add to history
+        operationHistory.push({ type: 'allocate', id, size });
+
         const result = memorySystem.allocate(id, size, algorithm);
+
 
         if (result.success) {
             log(result.message, "alloc");
@@ -180,7 +204,11 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        // Add to history
+        operationHistory.push({ type: 'deallocate', id });
+
         const result = memorySystem.deallocate(id);
+
 
         if (result.success) {
             log(result.message, "dealloc");
@@ -193,7 +221,31 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+
+    function replaySimulation() {
+        if (!currentInitData) return;
+
+        const algorithm = getSelectedAlgorithm();
+        log(`Switching to ${algorithm}... Replaying ${operationHistory.length} operations.`, "system");
+
+        // Reset system with same init data
+        memorySystem = new MemorySystem(currentInitData);
+
+        // Replay operations
+        operationHistory.forEach(op => {
+            if (op.type === 'allocate') {
+                memorySystem.allocate(op.id, op.size, algorithm);
+            } else if (op.type === 'deallocate') {
+                memorySystem.deallocate(op.id);
+            }
+        });
+
+        // Update UI
+        updateUI();
+    }
+
     // Helpers
+
     function getSelectedAlgorithm() {
         for (const radio of elements.algorithmRadios) {
             if (radio.checked) return radio.value;
