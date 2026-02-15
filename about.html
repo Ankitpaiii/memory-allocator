@@ -4,56 +4,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Memory Allocation Theory - OS Concepts</title>
+    <title>Theory & Concepts - OS Memory Management</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css?v=3">
     <style>
-        .theory-content {
+        body {
+            overflow: auto;
+        }
+
+        .theory-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
             padding: 2rem;
-            max-width: 1000px;
-            margin: 0 auto;
-            color: var(--text-main);
-            overflow-y: auto;
             flex-grow: 1;
+            overflow-y: auto;
+            align-items: start;
+        }
+
+        .theory-column {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .theory-column-header {
+            background-color: var(--text-main);
+            color: white;
+            padding: 1.2rem 1.5rem;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+            font-size: 1.2rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+
+        .theory-column-header.paging-header {
+            background: linear-gradient(135deg, #4A6163, #5D7A7D);
+        }
+
+        .theory-column-header.memory-header {
+            background: linear-gradient(135deg, #2F3E40, #4A6163);
+        }
+
+        .theory-column-body {
+            background-color: var(--bg-panel);
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(74, 97, 99, 0.08);
         }
 
         .algo-card {
-            background-color: var(--bg-panel);
-            padding: 1.5rem;
-            border-radius: var(--border-radius);
-            margin-bottom: 2rem;
+            background-color: var(--bg-input);
+            padding: 1.2rem;
+            border-radius: 10px;
+            margin-bottom: 1.2rem;
             border-left: 5px solid var(--primary);
-            box-shadow: 0 4px 15px rgba(74, 97, 99, 0.05);
-            /* Soft shadow */
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .algo-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .algo-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(74, 97, 99, 0.1);
         }
 
         .algo-card h2 {
             color: var(--accent);
-            margin-bottom: 1rem;
+            margin-bottom: 0.8rem;
+            font-size: 1.05rem;
+        }
+
+        .algo-card p {
+            font-size: 0.88rem;
+            line-height: 1.6;
+            color: var(--text-main);
+            margin-bottom: 0.8rem;
         }
 
         .algo-details {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 2rem;
+            gap: 0.8rem;
         }
 
         .pros,
         .cons {
-            background-color: var(--bg-input);
-            padding: 1rem;
+            background-color: var(--bg-panel);
+            padding: 0.8rem;
             border-radius: 6px;
         }
 
         .pros h4 {
             color: #5D7A7D;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.4rem;
+            font-size: 0.85rem;
         }
 
-        /* Slate Teal */
         .cons h4 {
             color: var(--danger);
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.4rem;
+            font-size: 0.85rem;
         }
 
         ul {
@@ -61,7 +116,15 @@
         }
 
         li {
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.3rem;
+            font-size: 0.82rem;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 1100px) {
+            .theory-layout {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -70,114 +133,200 @@
     <div class="app-container">
         <header class="main-header">
             <div class="header-content">
-                <h1>Memory Allocation Algorithms</h1>
+                <h1>OS Memory Management</h1>
                 <h2>Theory & Concepts</h2>
             </div>
             <nav class="header-nav">
-                <a href="index.html">Simulator</a>
+                <a href="index.html">Memory Allocator</a>
+                <a href="paging.html">Paging Simulator</a>
                 <a href="about.html" class="active">Theory & Concepts</a>
             </nav>
         </header>
 
-        <div class="theory-content">
+        <div class="theory-layout">
+            <!-- ═══ LEFT COLUMN: Memory Allocation Algorithms ═══ -->
+            <div class="theory-column">
+                <div class="theory-column-header memory-header">
+                    Memory Allocation Algorithms
+                </div>
+                <div class="theory-column-body">
 
-            <div class="algo-card">
-                <h2>1. First Fit</h2>
-                <p>Allocates the <strong>first hole</strong> that is big enough. Searching can start either from the
-                    beginning of the set of holes or where the previous first-fit search ended. We can stop searching as
-                    soon as we find a free hole that is large enough.</p>
-                <br>
-                <div class="algo-details">
-                    <div class="pros">
-                        <h4>Advantages</h4>
-                        <ul>
-                            <li>Fastest algorithm because it searches as little as possible.</li>
-                            <li>Simple to implement.</li>
-                        </ul>
+                    <div class="algo-card">
+                        <h2>1. First Fit</h2>
+                        <p>Allocates the <strong>first hole</strong> that is big enough. Searching starts from the
+                            beginning of the set of holes. We can stop as soon as we find a free hole that is large
+                            enough.</p>
+                        <div class="algo-details">
+                            <div class="pros">
+                                <h4>✅ Advantages</h4>
+                                <ul>
+                                    <li>Fastest — searches as little as possible.</li>
+                                    <li>Simple to implement.</li>
+                                </ul>
+                            </div>
+                            <div class="cons">
+                                <h4>❌ Disadvantages</h4>
+                                <ul>
+                                    <li>Leaves unused holes (external fragmentation).</li>
+                                    <li>Concentrates allocation at one end of memory.</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
-                    <div class="cons">
-                        <h4>Disadvantages</h4>
-                        <ul>
-                            <li>The remaining unused memory areas (holes) are left unused (external fragmentation).</li>
-                            <li>Tends to concentrate allocation at one end of memory.</li>
-                        </ul>
+
+                    <div class="algo-card" style="border-left-color: var(--secondary);">
+                        <h2>2. Best Fit</h2>
+                        <p>Allocates the <strong>smallest hole</strong> that is big enough. Must search the entire list.
+                            Produces the smallest leftover hole.</p>
+                        <div class="algo-details">
+                            <div class="pros">
+                                <h4>✅ Advantages</h4>
+                                <ul>
+                                    <li>Generally better memory utilization.</li>
+                                    <li>Minimizes wasted space in the short term.</li>
+                                </ul>
+                            </div>
+                            <div class="cons">
+                                <h4>❌ Disadvantages</h4>
+                                <ul>
+                                    <li>Slower — must search entire list.</li>
+                                    <li>Creates many tiny unusable holes.</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
+
+                    <div class="algo-card" style="border-left-color: var(--warning);">
+                        <h2>3. Worst Fit</h2>
+                        <p>Allocates the <strong>largest hole</strong>. Produces the largest leftover hole, which may be
+                            more useful than tiny holes from Best Fit.</p>
+                        <div class="algo-details">
+                            <div class="pros">
+                                <h4>✅ Advantages</h4>
+                                <ul>
+                                    <li>Largest leftover hole is more likely usable.</li>
+                                    <li>Reduces production of small unusable holes.</li>
+                                </ul>
+                            </div>
+                            <div class="cons">
+                                <h4>❌ Disadvantages</h4>
+                                <ul>
+                                    <li>Slow — requires searching entire list.</li>
+                                    <li>Breaks up large free blocks.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="algo-card" style="border-left-color: var(--success);">
+                        <h2>4. Next Fit</h2>
+                        <p>Like First Fit, but starts searching from the <strong>last allocated block</strong>. Wraps
+                            around to the beginning if it reaches the end.</p>
+                        <div class="algo-details">
+                            <div class="pros">
+                                <h4>✅ Advantages</h4>
+                                <ul>
+                                    <li>Very fast allocation.</li>
+                                    <li>Distributes allocations more evenly.</li>
+                                </ul>
+                            </div>
+                            <div class="cons">
+                                <h4>❌ Disadvantages</h4>
+                                <ul>
+                                    <li>May break up the largest free block more often.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
-            <div class="algo-card" style="border-left-color: var(--secondary);">
-                <h2>2. Best Fit</h2>
-                <p>Allocates the <strong>smallest hole</strong> that is big enough. We must search the entire list,
-                    unless the list is ordered by size. This strategy produces the smallest leftover hole.</p>
-                <br>
-                <div class="algo-details">
-                    <div class="pros">
-                        <h4>Advantages</h4>
-                        <ul>
-                            <li>Memory utilization is generally better than First Fit.</li>
-                            <li>Minimizes wasted space in the short term.</li>
-                        </ul>
-                    </div>
-                    <div class="cons">
-                        <h4>Disadvantages</h4>
-                        <ul>
-                            <li>Slower because it must search the entire list every time.</li>
-                            <li>Creates many very small holes that are difficult to use (high external fragmentation).
-                            </li>
-                        </ul>
-                    </div>
+            <!-- ═══ RIGHT COLUMN: Paging Algorithms ═══ -->
+            <div class="theory-column">
+                <div class="theory-column-header paging-header">
+                    Page Replacement Algorithms
                 </div>
-            </div>
+                <div class="theory-column-body">
 
-            <div class="algo-card" style="border-left-color: var(--warning);">
-                <h2>3. Worst Fit</h2>
-                <p>Allocates the <strong>largest hole</strong>. Again, we must search the entire list, unless it is
-                    sorted by size. This strategy produces the largest leftover hole, which may be more useful than the
-                    tiny holes from Best Fit.</p>
-                <br>
-                <div class="algo-details">
-                    <div class="pros">
-                        <h4>Advantages</h4>
-                        <ul>
-                            <li>Produces the largest leftover hole, which is more likely to be useful for future
-                                processes.</li>
-                            <li>Reduces the production of small, unusable holes.</li>
-                        </ul>
+                    <div class="algo-card" style="border-left-color: #42a5f5;">
+                        <h2>1. FIFO (First In, First Out)</h2>
+                        <p>The <strong>oldest page</strong> in memory is replaced first. Uses a simple queue — the page
+                            that has been in memory the longest is evicted when a new page needs to be loaded.</p>
+                        <div class="algo-details">
+                            <div class="pros">
+                                <h4>✅ Advantages</h4>
+                                <ul>
+                                    <li>Simplest to implement — just a queue.</li>
+                                    <li>Low overhead with minimal bookkeeping.</li>
+                                </ul>
+                            </div>
+                            <div class="cons">
+                                <h4>❌ Disadvantages</h4>
+                                <ul>
+                                    <li>Suffers from <strong>Bélády's anomaly</strong> — more frames can cause more
+                                        faults.</li>
+                                    <li>Ignores page usage patterns.</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
-                    <div class="cons">
-                        <h4>Disadvantages</h4>
-                        <ul>
-                            <li>Slow as it requires searching the entire list.</li>
-                            <li>Tends to break up large free blocks, potentially causing issues for large processes
-                                later.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
 
-            <div class="algo-card" style="border-left-color: var(--success);">
-                <h2>4. Next Fit</h2>
-                <p>Similar to First Fit, but starts the search from the <strong>last allocated block</strong>. It wraps
-                    around to the beginning if it reaches the end.</p>
-                <br>
-                <div class="algo-details">
-                    <div class="pros">
-                        <h4>Advantages</h4>
-                        <ul>
-                            <li>Very fast allocation.</li>
-                            <li>Distributes allocations more evenly across memory than First Fit.</li>
-                        </ul>
+                    <div class="algo-card" style="border-left-color: #ab47bc;">
+                        <h2>2. LRU (Least Recently Used)</h2>
+                        <p>Replaces the page that has <strong>not been used for the longest time</strong>. Based on the
+                            idea that pages used recently are likely to be used again soon (temporal locality).</p>
+                        <div class="algo-details">
+                            <div class="pros">
+                                <h4>✅ Advantages</h4>
+                                <ul>
+                                    <li>Good performance — exploits temporal locality.</li>
+                                    <li>Does not suffer from Bélády's anomaly.</li>
+                                </ul>
+                            </div>
+                            <div class="cons">
+                                <h4>❌ Disadvantages</h4>
+                                <ul>
+                                    <li>Expensive to implement — needs timestamping or stack.</li>
+                                    <li>High overhead for every memory access.</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
-                    <div class="cons">
-                        <h4>Disadvantages</h4>
-                        <ul>
-                            <li>May break up the largest block of free memory more often.</li>
-                        </ul>
+
+                    <div class="algo-card" style="border-left-color: #26a69a;">
+                        <h2>3. Optimal (OPT / MIN)</h2>
+                        <p>Replaces the page that will <strong>not be used for the longest time in the future</strong>.
+                            This is the theoretically best algorithm — it produces the fewest possible page faults.</p>
+                        <div class="algo-details">
+                            <div class="pros">
+                                <h4>✅ Advantages</h4>
+                                <ul>
+                                    <li>Produces the minimum number of page faults.</li>
+                                    <li>Serves as a benchmark for other algorithms.</li>
+                                </ul>
+                            </div>
+                            <div class="cons">
+                                <h4>❌ Disadvantages</h4>
+                                <ul>
+                                    <li><strong>Impossible to implement</strong> in practice — requires future
+                                        knowledge.</li>
+                                    <li>Used only for comparison and analysis.</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
+
+
+
                 </div>
             </div>
 
         </div>
+
+        <footer>
+            <p>Memory Allocation Simulator &copy; 2026</p>
+        </footer>
     </div>
 </body>
 

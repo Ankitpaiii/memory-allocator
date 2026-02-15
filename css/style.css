@@ -535,3 +535,192 @@ tr:hover {
 .hidden {
     display: none !important;
 }
+
+/* ═══════════════════════════════════════════════
+   PAGING SIMULATOR STYLES
+   ═══════════════════════════════════════════════ */
+
+/* Allow scrolling on paging page */
+body.paging-page {
+    overflow: auto;
+}
+
+body.paging-page .main-grid {
+    height: auto;
+    min-height: calc(100vh - 80px);
+    overflow: visible;
+}
+
+body.paging-page .visualization-panel {
+    overflow: visible;
+}
+
+/* Paging Grid Container */
+.paging-grid-container {
+    background-color: var(--bg-panel);
+    border-radius: 8px;
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.paging-viz {
+    min-height: auto;
+}
+
+.paging-grid-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 8px;
+}
+
+/* The OS-textbook-style table */
+.paging-table {
+    border-collapse: separate;
+    border-spacing: 6px 8px;
+    width: max-content;
+    min-width: 100%;
+    font-size: 0.9rem;
+}
+
+.paging-table th,
+.paging-table td {
+    border: none;
+    padding: 0;
+}
+
+/* Row labels (Reference, Frame 0, Status, etc.) */
+.paging-table .row-label {
+    font-weight: 700;
+    color: var(--text-muted);
+    text-align: left;
+    white-space: nowrap;
+    padding-right: 16px;
+    font-size: 0.85rem;
+    letter-spacing: 0.3px;
+    background: none;
+    min-width: 90px;
+}
+
+.paging-table .row-label.status-label {
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 0.78rem;
+    letter-spacing: 1px;
+}
+
+/* Reference header cells */
+.paging-table .ref-cell {
+    text-align: center;
+    font-weight: 800;
+    color: var(--text-muted);
+    font-size: 1rem;
+    padding: 4px 0;
+    min-width: 48px;
+}
+
+/* Frame cells */
+.paging-table .frame-cell {
+    width: 48px;
+    height: 48px;
+    text-align: center;
+    vertical-align: middle;
+    font-weight: 700;
+    font-size: 1rem;
+    border-radius: 8px;
+    transition: all 0.25s ease;
+}
+
+.paging-table .frame-cell.empty {
+    color: var(--text-muted);
+    background-color: var(--bg-input);
+}
+
+.paging-table .frame-cell.neutral {
+    color: var(--text-main);
+    background-color: var(--bg-input);
+}
+
+.paging-table .frame-cell.fault-cell {
+    color: #c62828;
+    background-color: #ffebee;
+    font-weight: 800;
+    box-shadow: inset 0 0 0 2px #ef9a9a;
+    animation: paging-pop 0.3s ease;
+}
+
+.paging-table .frame-cell.hit-cell {
+    color: #2e7d32;
+    background-color: #e8f5e9;
+    font-weight: 800;
+    box-shadow: inset 0 0 0 2px #a5d6a7;
+    animation: paging-pop 0.3s ease;
+}
+
+/* Status cells */
+.paging-table .status-cell {
+    text-align: center;
+    font-weight: 800;
+    font-size: 0.72rem;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    border-radius: 6px;
+    padding: 6px 4px;
+    min-width: 48px;
+}
+
+.paging-table .status-cell.hit-status {
+    color: #2e7d32;
+    background-color: #e8f5e9;
+}
+
+.paging-table .status-cell.miss-status {
+    color: #c62828;
+    background-color: #ffebee;
+}
+
+/* Animation */
+@keyframes paging-pop {
+    0% {
+        transform: scale(0.85);
+        opacity: 0.5;
+    }
+
+    60% {
+        transform: scale(1.08);
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Scrollbar for paging grid */
+.paging-grid-wrapper::-webkit-scrollbar {
+    height: 10px;
+}
+
+.paging-grid-wrapper::-webkit-scrollbar-track {
+    background: var(--bg-input);
+    border-radius: 5px;
+}
+
+.paging-grid-wrapper::-webkit-scrollbar-thumb {
+    background: #bdbdbd;
+    border-radius: 5px;
+}
+
+.paging-grid-wrapper::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 1rem;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    flex-shrink: 0;
+}

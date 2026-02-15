@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Page Replacement Simulator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css?v=3" />
+</head>
+
+<body class="paging-page">
+    <div class="app-container">
+        <!-- HEADER SECTION -->
+        <header class="main-header">
+            <div class="header-content">
+                <h1>Page Replacement Algorithm Simulator</h1>
+                <h2>
+                    Simulation of FIFO, LRU, and Optimal Algorithms
+                </h2>
+            </div>
+            <nav class="header-nav">
+                <a href="index.html">Memory Allocator</a>
+                <a href="paging.html" class="active">Paging Simulator</a>
+                <a href="about.html">Theory & Concepts</a>
+            </nav>
+        </header>
+
+        <!-- MAIN CONTENT GRID -->
+        <main class="main-grid">
+            <!-- LEFT COLUMN: CONTROL PANEL -->
+            <aside class="control-panel">
+                <div class="panel-section">
+                    <h3>1. Configuration</h3>
+                    <div class="form-group">
+                        <label for="numFrames">Number of Frames</label>
+                        <input type="number" id="numFrames" value="3" min="1" max="10" />
+                    </div>
+                    <div class="form-group">
+                        <label for="refString">Reference String</label>
+                        <input type="text" id="refString" placeholder="e.g., 7 0 1 2 0 3 0 4 2 3"
+                            value="7 0 1 2 0 3 0 4 2 3 0 3 2 1 2 0 1 7 0 1" />
+                        <small style="color: rgba(255,255,255,0.6); font-size: 0.8rem">
+                            Space or comma separated page numbers
+                        </small>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <h3>2. Algorithm</h3>
+                    <div class="radio-group">
+                        <label class="radio-card">
+                            <input type="radio" name="pagingAlgorithm" value="fifo" checked />
+                            <span>FIFO</span>
+                        </label>
+                        <label class="radio-card">
+                            <input type="radio" name="pagingAlgorithm" value="lru" />
+                            <span>LRU</span>
+                        </label>
+                        <label class="radio-card">
+                            <input type="radio" name="pagingAlgorithm" value="optimal" />
+                            <span>Optimal</span>
+                        </label>
+
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <h3>3. Controls</h3>
+                    <div class="actions">
+                        <button id="btnStep" class="btn primary">Step</button>
+                        <button id="btnRunAll" class="btn success">Run All</button>
+                    </div>
+                    <div class="actions">
+                        <button id="btnPagingReset" class="btn danger">Reset</button>
+                    </div>
+                    <p id="paging-error" class="error-text"></p>
+                </div>
+            </aside>
+
+            <!-- RIGHT COLUMN: VISUALIZATION & STATS -->
+            <section class="visualization-panel">
+                <!-- PAGING GRID VISUALIZATION -->
+                <div class="viz-container paging-viz">
+                    <div class="section-header">
+                        <h3>Page Frame Allocation Grid</h3>
+                        <div class="legend">
+                            <span class="legend-item"><span class="dot"
+                                    style="background-color:#e8f5e9;border:2px solid #4caf50"></span> Hit</span>
+                            <span class="legend-item"><span class="dot"
+                                    style="background-color:#ffebee;border:2px solid #e53935"></span> Fault</span>
+                        </div>
+                    </div>
+
+                    <div id="paging-grid" class="paging-grid-container">
+                        <div class="placeholder-text">
+                            Configure frames and reference string, then click Step or Run All.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STATISTICS DASHBOARD -->
+                <div class="stats-dashboard">
+                    <div class="stat-card">
+                        <span class="stat-label">Total References</span>
+                        <span class="stat-value" id="pgStatTotal">0</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Page Hits</span>
+                        <span class="stat-value highlight" id="pgStatHits">0</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Page Faults</span>
+                        <span class="stat-value warning" id="pgStatFaults">0</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Hit Ratio</span>
+                        <span class="stat-value highlight" id="pgStatHitRatio">0%</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Fault Ratio</span>
+                        <span class="stat-value warning" id="pgStatFaultRatio">0%</span>
+                    </div>
+                </div>
+
+                <!-- LOG PANEL -->
+                <div class="log-panel" style="flex-grow: 1; min-height: 180px;">
+                    <h3>Step Log</h3>
+                    <div id="paging-log-content" class="log-content">
+                        <div class="log-entry system">
+                            Paging simulator ready. Configure and press Step or Run All.
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+        </main>
+
+        <footer>
+            <p>Memory Allocation Simulator &copy; 2026</p>
+        </footer>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="js/paging.js"></script>
+    <script src="js/paging-ui.js"></script>
+</body>
+
+</html>
