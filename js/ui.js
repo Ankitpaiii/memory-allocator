@@ -192,6 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             showError(result.message);
             log(result.message, "fail");
+            updateUI();
         }
     }
 
@@ -218,6 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             showError(result.message);
             log(result.message, "fail");
+            updateUI(); // Ensure consistent state view
         }
     }
 
